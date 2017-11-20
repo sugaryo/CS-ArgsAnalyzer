@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArgsAnalyzer", "ArgsAnalyzer\ArgsAnalyzer.csproj", "{0D52F3B8-5929-4956-8BB2-F0CF011DD528}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArgsAnalyzerDriver", "ArgsAnalyzerDriver\ArgsAnalyzerDriver.csproj", "{60D3CF12-ABF0-48FC-928F-BAFD1A80D395}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D52F3B8-5929-4956-8BB2-F0CF011DD528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D52F3B8-5929-4956-8BB2-F0CF011DD528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D52F3B8-5929-4956-8BB2-F0CF011DD528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D52F3B8-5929-4956-8BB2-F0CF011DD528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D3CF12-ABF0-48FC-928F-BAFD1A80D395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D3CF12-ABF0-48FC-928F-BAFD1A80D395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D3CF12-ABF0-48FC-928F-BAFD1A80D395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D3CF12-ABF0-48FC-928F-BAFD1A80D395}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
