@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ArgsAnalyzer
 {
+	/// <summary>
+	/// 拡張メソッド
+	/// </summary>
 	public static class extensions
 	{
 		public static bool startsWith( this string s, params string[] with )
