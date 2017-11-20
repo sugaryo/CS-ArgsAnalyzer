@@ -20,7 +20,7 @@ namespace ArgsAnalyzer
 
 		public static string[] split( this string s, params string[] by )
 		{
-			return s.Split( by, StringSplitOptions.RemoveEmptyEntries );
+			return s.Split( by, StringSplitOptions.None );
 		}
 	}
 }
