@@ -11,14 +11,14 @@ namespace ArgsAnalyzer
 	/// <summary>
 	/// コマンドライン引数解析
 	/// </summary>
-    public class ArgsAnalyzer
-    {
+	public class ArgsAnalyzer
+	{
 		/// <summary>パラメータ</summary>
 		private readonly List<string> parameters = new List<string>();
 
 		/// <summary>オプション指定</summary>
 		private readonly List<Option> options = new List<Option>();
-		
+
 
 		/// <summary>
 		/// コマンドライン引数 <paramref name="args"/> を読み込み、
@@ -28,10 +28,16 @@ namespace ArgsAnalyzer
 		/// <para>
 		/// <code>"/"</code> または <code>"-"</code> で始まる引数は「オプション指定」として扱います。
 		/// 先頭の <code>"/"</code> または <code>"-"</code> は除去されます。
-		/// オプション指定は
+		/// オプション指定は <seealso cref="AsOptions"/> で列挙を取得できます。
+		/// </para>
+		/// <para>
+		/// なおオプション指定は
 		/// 「値型オプション（<seealso cref="ValueOption"/>）」と
 		/// 「属性型オプション（<seealso cref="PropertyOption"/>）」の２種類に分かれます。
-		/// オプション指定は <seealso cref="AsOptions"/> で列挙を取得できます。
+		/// 前者は単一の値、後者はキーと値のペアで構成されます。
+		/// 値型オプションと属性型オプションは、それぞれ
+		/// <seealso cref="AsValueOptions"/> と
+		/// <seealso cref="AsPropertyOptions"/> で列挙を取得できます。
 		/// </para>
 		/// <para>
 		/// オプション指定でない場合、通常の「パラメータ」として扱います。
@@ -58,14 +64,14 @@ namespace ArgsAnalyzer
 		/// <seealso cref="ValueOption"/>
 		/// <seealso cref="PropertyOption"/>
 		public void Load( IEnumerable<string> args )
-		{	
+		{
 			foreach ( string arg in args )
 			{
 				if ( arg.startsWith( "/", "-" ) )
 				{
 					#region オプション
 					string option = arg.TrimStart( '/', '-' );
-					
+
 					if ( option.Contains( ":" ) )
 					{
 						string[] token = option.split( ":" );
@@ -144,5 +150,5 @@ namespace ArgsAnalyzer
 				.Where( x => x is PropertyOption )
 				.Select( x => x as PropertyOption );
 		}
-    }
+	}
 }

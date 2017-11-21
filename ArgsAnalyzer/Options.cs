@@ -17,7 +17,6 @@ namespace ArgsAnalyzer
 	{
 		public abstract class Option
 		{
-			// 特に実装なし。
 			public abstract string Get();
 		};
 
@@ -32,7 +31,7 @@ namespace ArgsAnalyzer
 			/// <summary>値</summary>
 			public readonly string value;
 
-			public ValueOption(string value)
+			public ValueOption( string value )
 			{
 				this.value = value;
 			}
@@ -62,12 +61,12 @@ namespace ArgsAnalyzer
 			/// <summary>値</summary>
 			public readonly string value;
 
-			public PropertyOption(string key, string value)
+			public PropertyOption( string key, string value )
 			{
 				this.key = key;
 				this.value = value;
 			}
-			
+
 			public override string Get()
 			{
 				return this.key;

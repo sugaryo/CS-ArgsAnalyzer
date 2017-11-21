@@ -44,10 +44,10 @@ namespace ArgsAnalyzerDriver
 			{
 				Console.WriteLine( "property-option: " + po.key + " = " + po.value );
 			}
-			
+
 			Console.WriteLine();
 			Console.WriteLine();
-			Console.WriteLine("press any key to exit.");
+			Console.WriteLine( "press any key to exit." );
 
 			Console.ReadKey( false );
 		}

@@ -21,9 +21,16 @@ namespace ArgsAnalyzer
 			return false;
 		}
 
-		public static string[] split( this string s, params string[] by )
+		public static string[] split( this string s, 
+				params string[] by )
 		{
 			return s.Split( by, StringSplitOptions.None );
+		}
+		public static string[] split( this string s, 
+				StringSplitOptions option, 
+				params string[] by )
+		{
+			return s.Split( by, option );
 		}
 	}
 }
