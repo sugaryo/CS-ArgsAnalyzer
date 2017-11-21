@@ -11,7 +11,7 @@ namespace ArgsAnalyzer
 	/// <summary>
 	/// コマンドライン引数解析
 	/// </summary>
-	public class ArgsAnalyzer
+	public class Arguments
 	{
 		/// <summary>パラメータ</summary>
 		private readonly List<string> parameters = new List<string>();

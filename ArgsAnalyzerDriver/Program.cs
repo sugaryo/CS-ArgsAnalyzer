@@ -24,7 +24,7 @@ namespace ArgsAnalyzerDriver
 			//   /d
 			//   -x=111
 			//   /y=222,333,444
-			ArgsAnalyzer.ArgsAnalyzer aa = new ArgsAnalyzer.ArgsAnalyzer();
+			ArgsAnalyzer.Arguments aa = new ArgsAnalyzer.Arguments();
 			aa.Load( args );
 
 			var parameters = aa.AsParameters();
