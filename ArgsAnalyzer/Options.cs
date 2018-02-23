@@ -17,7 +17,8 @@ namespace ArgsAnalyzer
 	{
 		public abstract class Option
 		{
-			public abstract string Get();
+			public string Name { get { return this.GetName(); } }
+			protected abstract string GetName();
 		};
 
 		/// <summary>
@@ -36,7 +37,7 @@ namespace ArgsAnalyzer
 				this.value = value;
 			}
 
-			public override string Get()
+			protected override string GetName()
 			{
 				return this.value;
 			}
@@ -67,7 +68,7 @@ namespace ArgsAnalyzer
 				this.value = value;
 			}
 
-			public override string Get()
+			protected override string GetName()
 			{
 				return this.key;
 			}
