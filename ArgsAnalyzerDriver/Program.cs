@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArgsAnalyzer;
 using static ArgsAnalyzer.Options;
 
 namespace ArgsAnalyzerDriver
@@ -14,6 +15,13 @@ namespace ArgsAnalyzerDriver
 	{
 		static void Main( string[] args )
 		{
+			Console.WriteLine( "psvm args:" );
+			foreach ( var a in args )
+			{
+				Console.WriteLine( " -" + a );
+			}
+
+
 			// Debug args:
 			//   hoge
 			//   moge
@@ -24,26 +32,30 @@ namespace ArgsAnalyzerDriver
 			//   /d
 			//   -x=111
 			//   /y=222,333,444
-			ArgsAnalyzer.Arguments aa = new ArgsAnalyzer.Arguments();
-			aa.Load( args );
+			Arguments arguments = args.parse();
 
-			var parameters = aa.AsParameters();
+			Console.WriteLine( "parameters:" );
+			var parameters = arguments.AsParameters();
 			foreach ( string p in parameters )
 			{
-				Console.WriteLine( "parameter: " + p );
+				Console.WriteLine( " -" + p );
 			}
 
-			var v_options = aa.AsValueOptions();
+			
+			Console.WriteLine( "options(value):" );
+			var v_options = arguments.AsValueOptions();
 			foreach ( ValueOption vo in v_options )
 			{
-				Console.WriteLine( "value-option: " + vo.value );
+				Console.WriteLine( " -" + vo.value );
 			}
-
-			var p_options = aa.AsPropertyOptions();
+			
+			Console.WriteLine( "options(property):" );
+			var p_options = arguments.AsPropertyOptions();
 			foreach ( PropertyOption po in p_options )
 			{
-				Console.WriteLine( "property-option: " + po.key + " = " + po.value );
+				Console.WriteLine( " -" + po.key + " = " + po.value );
 			}
+
 
 			Console.WriteLine();
 			Console.WriteLine();

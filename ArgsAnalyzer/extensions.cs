@@ -20,7 +20,6 @@ namespace ArgsAnalyzer
 
 			return false;
 		}
-
 		public static string[] split( this string s, 
 				params string[] by )
 		{
@@ -31,6 +30,13 @@ namespace ArgsAnalyzer
 				params string[] by )
 		{
 			return s.Split( by, option );
+		}
+
+		public static Arguments parse( this string[] args )
+		{
+			var arguments = new Arguments();
+			arguments.Load( args );
+			return arguments;
 		}
 	}
 }
