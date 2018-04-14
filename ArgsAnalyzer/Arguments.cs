@@ -15,10 +15,11 @@ namespace ArgsAnalyzer
 	{
 		/// <summary>パラメータ</summary>
 		private readonly List<string> parameters = new List<string>();
-
-		/// <summary>オプション指定</summary>
-		private readonly List<Option> options = new List<Option>();
 		
+		/// <summary>オプション指定の管理マップ</summary>
+		private readonly Dictionary<string, Option> map = new Dictionary<string, Option>();
+
+		#region Load / Add
 		/// <summary>
 		/// コマンドライン引数 <paramref name="args"/> を読み込み、
 		/// 「パラメータ」と「オプション指定」に振り分けます。
@@ -76,24 +77,27 @@ namespace ArgsAnalyzer
 				#region オプション
 				string option = arg.TrimStart( '/', '-' );
 
+				Option o;
 				if ( option.Contains( ":" ) )
 				{
 					string[] token = option.split( ":" );
 
-					Option o = new PropertyOption( token[0], token[1] );
-					this.options.Add( o );
+					o = new PropertyOption( token[0], token[1] );
 				}
 				else if ( option.Contains( "=" ) )
 				{
 					string[] token = option.split( "=" );
 
-					Option o = new PropertyOption( token[0], token[1] );
-					this.options.Add( o );
+					o = new PropertyOption( token[0], token[1] );
 				}
 				else
 				{
-					Option o = new ValueOption( option );
-					this.options.Add( o );
+					o = new ValueOption( option );
+				}
+				
+				if ( !this.map.ContainsKey( o.Name ) )
+				{
+					this.map.Add( o.Name, o );
 				}
 				#endregion
 			}
@@ -104,17 +108,52 @@ namespace ArgsAnalyzer
 				#endregion
 			}
 		}
+		#endregion
 
-
+		#region Clear
+		[Obsolete("正直 command line args って変化しないから一回Loadしたらもうそれで良い（Clear出来る意味がない）よね。")]
 		/// <summary>
 		/// このインスタンスが保持している「パラメータ」及び「オプション指定」を全て削除します。
 		/// </summary>
 		public void Clear()
 		{
 			this.parameters.Clear();
-			this.options.Clear();
+			this.map.Clear();
 		}
+		#endregion
 
+
+		#region Have / Prop
+		public bool Have( params string[] names )
+		{
+			foreach ( var name in names )
+			{
+				if ( this.map.ContainsKey( name ) ) return true;
+			}
+			return false;
+		}
+		public bool Prop( out string value, params string[] names )
+		{
+			foreach ( var name in names )
+			{
+				if ( this.map.ContainsKey( name ) )
+				{
+					Option o = this.map[name];
+					if ( o is PropertyOption )
+					{
+						PropertyOption prop = o as PropertyOption;
+						value = prop.value;
+						return true;
+					}
+				}
+			}
+			value = null;
+			return false;
+		}
+		#endregion
+
+
+		#region IEnumerable
 
 		/// <summary>
 		/// 「パラメータ」の列挙を返します。
@@ -125,13 +164,14 @@ namespace ArgsAnalyzer
 			return this.parameters.AsEnumerable();
 		}
 
+
 		/// <summary>
 		/// 「オプション指定」の列挙を返します。
 		/// </summary>
 		/// <returns>オプション指定列挙</returns>
 		public IEnumerable<Option> AsOptions()
 		{
-			return this.options.AsEnumerable();
+			return this.map.Values.AsEnumerable();
 		}
 		/// <summary>
 		/// 「値型オプション指定」の列挙を返します。
@@ -139,7 +179,7 @@ namespace ArgsAnalyzer
 		/// <returns>値型オプション指定列挙</returns>
 		public IEnumerable<ValueOption> AsValueOptions()
 		{
-			return this.options
+			return this.AsOptions()
 				.Where( x => x is ValueOption )
 				.Select( x => x as ValueOption );
 		}
@@ -149,9 +189,11 @@ namespace ArgsAnalyzer
 		/// <returns>属性型オプション指定列挙</returns>
 		public IEnumerable<PropertyOption> AsPropertyOptions()
 		{
-			return this.options
+			return this.AsOptions()
 				.Where( x => x is PropertyOption )
 				.Select( x => x as PropertyOption );
 		}
+
+		#endregion
 	}
 }
