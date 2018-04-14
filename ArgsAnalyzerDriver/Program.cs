@@ -20,8 +20,7 @@ namespace ArgsAnalyzerDriver
 			{
 				Console.WriteLine( " -" + a );
 			}
-
-
+			
 			// Debug args:
 			//   hoge
 			//   moge
@@ -32,6 +31,7 @@ namespace ArgsAnalyzerDriver
 			//   /d
 			//   -x=111
 			//   /y=222,333,444
+			// コピペ用：hoge moge piyo -a -b /c /d -x=111 /y=222,333,444
 			Arguments arguments = args.parse();
 
 			Console.WriteLine( "parameters:" );
@@ -55,6 +55,16 @@ namespace ArgsAnalyzerDriver
 			{
 				Console.WriteLine( " -" + po.key + " = " + po.value );
 			}
+
+			// Have
+			Console.WriteLine( "have option:" );
+			Console.WriteLine( $" - args[a] : {arguments.Have( "a" )}" );
+
+			// Prop
+			Console.WriteLine( "prop option:" );
+			string x;
+			arguments.Prop( out x, "x" );
+			Console.WriteLine( $" - args[x] : {x ?? "null"}" );
 
 
 			Console.WriteLine();
