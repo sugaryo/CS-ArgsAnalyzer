@@ -18,8 +18,7 @@ namespace ArgsAnalyzer
 
 		/// <summary>オプション指定</summary>
 		private readonly List<Option> options = new List<Option>();
-
-
+		
 		/// <summary>
 		/// コマンドライン引数 <paramref name="args"/> を読み込み、
 		/// 「パラメータ」と「オプション指定」に振り分けます。
@@ -67,38 +66,42 @@ namespace ArgsAnalyzer
 		{
 			foreach ( string arg in args )
 			{
-				if ( arg.startsWith( "/", "-" ) )
+				this.Add( arg );
+			}
+		}
+		public void Add( string arg )
+		{
+			if ( arg.startsWith( "/", "-" ) )
+			{
+				#region オプション
+				string option = arg.TrimStart( '/', '-' );
+
+				if ( option.Contains( ":" ) )
 				{
-					#region オプション
-					string option = arg.TrimStart( '/', '-' );
+					string[] token = option.split( ":" );
 
-					if ( option.Contains( ":" ) )
-					{
-						string[] token = option.split( ":" );
+					Option o = new PropertyOption( token[0], token[1] );
+					this.options.Add( o );
+				}
+				else if ( option.Contains( "=" ) )
+				{
+					string[] token = option.split( "=" );
 
-						Option o = new PropertyOption( token[0], token[1] );
-						this.options.Add( o );
-					}
-					else if ( option.Contains( "=" ) )
-					{
-						string[] token = option.split( "=" );
-
-						Option o = new PropertyOption( token[0], token[1] );
-						this.options.Add( o );
-					}
-					else
-					{
-						Option o = new ValueOption( option );
-						this.options.Add( o );
-					}
-					#endregion
+					Option o = new PropertyOption( token[0], token[1] );
+					this.options.Add( o );
 				}
 				else
 				{
-					#region パラメータ
-					this.parameters.Add( arg );
-					#endregion
+					Option o = new ValueOption( option );
+					this.options.Add( o );
 				}
+				#endregion
+			}
+			else
+			{
+				#region パラメータ
+				this.parameters.Add( arg );
+				#endregion
 			}
 		}
 
