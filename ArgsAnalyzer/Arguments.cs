@@ -38,9 +38,15 @@ namespace ArgsAnalyzer
 		/// 値型オプションと属性型オプションは、それぞれ
 		/// <seealso cref="AsValueOptions"/> と
 		/// <seealso cref="AsPropertyOptions"/> で列挙を取得できます。
+		/// （オプションに関しては元の順序は保持されません）
 		/// </para>
 		/// <para>
-		/// オプション指定でない場合、通常の「パラメータ」として扱います。
+		/// また、<seealso cref="Have"/> で指定した名前のオプションの有無を、
+		/// <seealso cref="Prop"/> で指定した名前の属性型オプションの有無と属性値を、
+		/// それぞれ取得できます。
+		/// </para>
+		/// <para>
+		/// なおオプション指定でない場合、通常の「パラメータ」として扱います。
 		/// パラメータは <seealso cref="AsParameters"/> で列挙を取得できます。
 		/// </para>
 		/// </remarks>
@@ -61,6 +67,8 @@ namespace ArgsAnalyzer
 		/// 
 		/// <seealso cref="AsParameters"/>
 		/// <seealso cref="AsOptions"/>
+		/// <seealso cref="Have"/>
+		/// <seealso cref="Prop"/>
 		/// <seealso cref="ValueOption"/>
 		/// <seealso cref="PropertyOption"/>
 		public void Load( IEnumerable<string> args )
@@ -124,6 +132,14 @@ namespace ArgsAnalyzer
 
 
 		#region Have / Prop
+		/// <summary>
+		/// オプション値の有無判定
+		/// </summary>
+		/// <param name="names">判定するオプション名（複数指定可）</param>
+		/// <returns>解析したコマンドライン引数 <code>args</code> に、
+		/// 指定したオプションが含まれる場合は <code>true</code> を、
+		/// 含まれていない場合は <code>false</code> を、それぞれ返します。 
+		/// </returns>
 		public bool Have( params string[] names )
 		{
 			foreach ( var name in names )
@@ -132,6 +148,18 @@ namespace ArgsAnalyzer
 			}
 			return false;
 		}
+		/// <summary>
+		/// 属性型オプションの有無判定と属性値の取得
+		/// </summary>
+		/// <param name="value">属性値の <code>out parameter</code> </param>
+		/// <param name="names">判定するオプション名（複数指定可）</param>
+		/// <returns>解析したコマンドライン引数 <code>args</code> に、
+		/// 指定した属性型オプションが含まれる場合は <code>true</code> を、
+		/// 含まれていない場合は <code>false</code> を返し、
+		/// 含まれる場合はその <seealso cref="PropertyOption.value"/> を
+		/// <code>out parameter</code> に設定します。
+		/// </returns>
+		/// <seealso cref="PropertyOption"/>
 		public bool Prop( out string value, params string[] names )
 		{
 			foreach ( var name in names )
