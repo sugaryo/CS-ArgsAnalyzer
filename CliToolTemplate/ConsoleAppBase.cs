@@ -13,8 +13,9 @@ namespace CliToolTemplate
 #warning TODO：プロパティはどちらかと言うと、ビルダーパターンでImmutableな設定VOを食わせる形にしたい。
         #region properties
 
-        public string Title { get; set; }
+        public string Title { get; set; } = null;
         public bool HasTitle { get { return this.Title.notNullOrWS(); } }
+
 
         public const int DEFAULT_WIDTH = 80;
         public const int MIN_WIDTH = 20;
@@ -33,7 +34,7 @@ namespace CliToolTemplate
         public string Bar { get { return new string( this.BarChar, this.width ); } }
 
         public const string DEFAULT_EXIT_MESSAGE = "press any key to exit.";
-        private string onExitMessage;
+        private string onExitMessage = DEFAULT_EXIT_MESSAGE;
         public string OnExitMessage
         {
             get { return onExitMessage; }
@@ -42,7 +43,7 @@ namespace CliToolTemplate
 
 
         public const string DEFAULT_ERROR_MESSAGE = "!! ERROR !!";
-        private string onErrorMessage;
+        private string onErrorMessage = DEFAULT_ERROR_MESSAGE;
         public string OnErrorMessage
         {
             get { return onErrorMessage; }
