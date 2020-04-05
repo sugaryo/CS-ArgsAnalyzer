@@ -54,13 +54,23 @@ namespace ArgsAnalyzer
 		/// <param name="args">コマンドライン引数</param>
 		/// 
 		/// <example>
+		/// 基本的な使い方。
 		/// <code>
 		/// <![CDATA[
-		/// var aa = new ArgsAnalyzer();
-		/// aa.Load( args );
+		/// Arguments arguments = new Arguments();
+		/// arguments.Load( args );
 		/// 
-		/// var parameters = aa.AsParameters();
-		/// var options = aa.AsOptions();
+		/// var parameters = arguments.AsParameters();
+		/// var options    = arguments.AsOptions();
+		/// ]]>
+		/// </code>
+		/// _extensions.cs では string[] に拡張メソッドを追加しているので、上記は以下と同等。
+		/// <code>
+		/// <![CDATA[
+		/// Arguments arguments = args.parse();
+		/// 
+		/// var parameters = arguments.AsParameters();
+		/// var options    = arguments.AsOptions();
 		/// ]]>
 		/// </code>
 		/// </example>
