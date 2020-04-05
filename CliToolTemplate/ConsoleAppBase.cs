@@ -10,7 +10,7 @@ namespace CliToolTemplate
 {
     public abstract class ConsoleAppBase
     {
-#warning プロパティはどちらかと言うと、ビルダーパターンでImmutableな設定VOを食わせる形にしたい。
+#warning TODO：プロパティはどちらかと言うと、ビルダーパターンでImmutableな設定VOを食わせる形にしたい。
         #region properties
 
         public string Title { get; set; }
@@ -77,7 +77,7 @@ namespace CliToolTemplate
                 }
 
 
-                
+#warning TODO：この辺に幾つか基本処理の分岐を作り込む。
                 this.Execute( this.arguments );
 
 

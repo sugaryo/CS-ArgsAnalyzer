@@ -135,10 +135,11 @@ namespace ArgsAnalyzer
 				#endregion
 			}
 		}
-		#endregion
+        #endregion
 
-		#region Clear
-		[Obsolete("正直 command line args って変化しないから一回Loadしたらもうそれで良い（Clear出来る意味がない）よね。")]
+
+        #region Clear(deplecated)
+        [Obsolete("正直 command line args って変化しないから一回Loadしたらもうそれで良い（Clear出来る意味がない）よね。")]
 		/// <summary>
 		/// このインスタンスが保持している「パラメータ」及び「オプション指定」を全て削除します。
 		/// </summary>
@@ -200,7 +201,7 @@ namespace ArgsAnalyzer
 		#endregion
 
 
-		#region IEnumerable
+		#region [IEnumerable] AsParameters / AsOptions / AsValueOptions / AsPropertyOptions
 
 		/// <summary>
 		/// 「パラメータ」の列挙を返します。
