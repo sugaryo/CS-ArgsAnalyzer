@@ -15,73 +15,82 @@ namespace ArgsAnalyzer
 	{
 		/// <summary>パラメータ</summary>
 		private readonly List<string> parameters = new List<string>();
-		
-		/// <summary>オプション指定の管理マップ</summary>
-		private readonly Dictionary<string, Option> map = new Dictionary<string, Option>();
 
-		#region Load / Add
-		/// <summary>
-		/// コマンドライン引数 <paramref name="args"/> を読み込み、
-		/// 「パラメータ」と「オプション指定」に振り分けます。
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// <code>"/"</code> または <code>"-"</code> で始まる引数は「オプション指定」として扱います。
-		/// 先頭の <code>"/"</code> または <code>"-"</code> は除去されます。
-		/// オプション指定は <seealso cref="AsOptions"/> で列挙を取得できます。
-		/// </para>
-		/// <para>
-		/// なおオプション指定は
-		/// 「値型オプション（<seealso cref="ValueOption"/>）」と
-		/// 「属性型オプション（<seealso cref="PropertyOption"/>）」の２種類に分かれます。
-		/// 前者は単一の値、後者はキーと値のペアで構成されます。
-		/// 値型オプションと属性型オプションは、それぞれ
-		/// <seealso cref="AsValueOptions"/> と
-		/// <seealso cref="AsPropertyOptions"/> で列挙を取得できます。
-		/// （オプションに関しては元の順序は保持されません）
-		/// </para>
-		/// <para>
-		/// また、<seealso cref="Have"/> で指定した名前のオプションの有無を、
-		/// <seealso cref="Prop"/> で指定した名前の属性型オプションの有無と属性値を、
-		/// それぞれ取得できます。
-		/// </para>
-		/// <para>
-		/// なおオプション指定でない場合、通常の「パラメータ」として扱います。
-		/// パラメータは <seealso cref="AsParameters"/> で列挙を取得できます。
-		/// </para>
-		/// </remarks>
-		/// 
-		/// <param name="args">コマンドライン引数</param>
-		/// 
-		/// <example>
-		/// 基本的な使い方。
-		/// <code>
-		/// <![CDATA[
-		/// Arguments arguments = new Arguments();
-		/// arguments.Load( args );
-		/// 
-		/// var parameters = arguments.AsParameters();
-		/// var options    = arguments.AsOptions();
-		/// ]]>
-		/// </code>
-		/// _extensions.cs では string[] に拡張メソッドを追加しているので、上記は以下と同等。
-		/// <code>
-		/// <![CDATA[
-		/// Arguments arguments = args.parse();
-		/// 
-		/// var parameters = arguments.AsParameters();
-		/// var options    = arguments.AsOptions();
-		/// ]]>
-		/// </code>
-		/// </example>
-		/// 
-		/// <seealso cref="AsParameters"/>
-		/// <seealso cref="AsOptions"/>
-		/// <seealso cref="Have"/>
-		/// <seealso cref="Prop"/>
-		/// <seealso cref="ValueOption"/>
-		/// <seealso cref="PropertyOption"/>
-		public void Load( IEnumerable<string> args )
+#warning FIXME：OptionでMap作るよりはValuesとPropertiesで分けた方が良い気がしてきた。
+        /// <summary>オプション指定の管理マップ</summary>
+        private readonly Dictionary<string, Option> map = new Dictionary<string, Option>();
+
+
+        #region [propg] Parameterless / NoOptions / Empty
+        public bool IsParameterless { get{ return 0 == this.parameters.Count; } }
+        public bool IsNoOptions     { get{ return 0 == this.map.Count; } }
+        public bool IsEmpty         { get{ return this.IsParameterless && this.IsNoOptions; } }
+        #endregion
+
+
+        #region Load / Add
+        /// <summary>
+        /// コマンドライン引数 <paramref name="args"/> を読み込み、
+        /// 「パラメータ」と「オプション指定」に振り分けます。
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <code>"/"</code> または <code>"-"</code> で始まる引数は「オプション指定」として扱います。
+        /// 先頭の <code>"/"</code> または <code>"-"</code> は除去されます。
+        /// オプション指定は <seealso cref="AsOptions"/> で列挙を取得できます。
+        /// </para>
+        /// <para>
+        /// なおオプション指定は
+        /// 「値型オプション（<seealso cref="ValueOption"/>）」と
+        /// 「属性型オプション（<seealso cref="PropertyOption"/>）」の２種類に分かれます。
+        /// 前者は単一の値、後者はキーと値のペアで構成されます。
+        /// 値型オプションと属性型オプションは、それぞれ
+        /// <seealso cref="AsValueOptions"/> と
+        /// <seealso cref="AsPropertyOptions"/> で列挙を取得できます。
+        /// （オプションに関しては元の順序は保持されません）
+        /// </para>
+        /// <para>
+        /// また、<seealso cref="Have"/> で指定した名前のオプションの有無を、
+        /// <seealso cref="Prop"/> で指定した名前の属性型オプションの有無と属性値を、
+        /// それぞれ取得できます。
+        /// </para>
+        /// <para>
+        /// なおオプション指定でない場合、通常の「パラメータ」として扱います。
+        /// パラメータは <seealso cref="AsParameters"/> で列挙を取得できます。
+        /// </para>
+        /// </remarks>
+        /// 
+        /// <param name="args">コマンドライン引数</param>
+        /// 
+        /// <example>
+        /// 基本的な使い方。
+        /// <code>
+        /// <![CDATA[
+        /// Arguments arguments = new Arguments();
+        /// arguments.Load( args );
+        /// 
+        /// var parameters = arguments.AsParameters();
+        /// var options    = arguments.AsOptions();
+        /// ]]>
+        /// </code>
+        /// _extensions.cs では string[] に拡張メソッドを追加しているので、上記は以下と同等。
+        /// <code>
+        /// <![CDATA[
+        /// Arguments arguments = args.parse();
+        /// 
+        /// var parameters = arguments.AsParameters();
+        /// var options    = arguments.AsOptions();
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
+        /// <seealso cref="AsParameters"/>
+        /// <seealso cref="AsOptions"/>
+        /// <seealso cref="Have"/>
+        /// <seealso cref="Prop"/>
+        /// <seealso cref="ValueOption"/>
+        /// <seealso cref="PropertyOption"/>
+        public void Load( IEnumerable<string> args )
 		{
 			foreach ( string arg in args )
 			{
