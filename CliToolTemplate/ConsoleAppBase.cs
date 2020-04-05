@@ -31,9 +31,6 @@ namespace CliToolTemplate
         }
 
 
-        public char BarChar { get; set; } = '-';
-        public string Bar { get { return new string( this.BarChar, this.Width ); } }
-
         public const string DEFAULT_EXIT_MESSAGE = "press any key to exit.";
         private string onExitMessage = DEFAULT_EXIT_MESSAGE;
         public string OnExitMessage
@@ -70,10 +67,10 @@ namespace CliToolTemplate
         {
             try
             {
-                string bar = this.Bar;
 
                 if ( this.HasTitle )
                 {
+                    string bar = this.CreateBar( '=' );
                     Console.WriteLine( bar );
                     Console.WriteLine( this.Title );
                     Console.WriteLine( bar );
@@ -118,7 +115,7 @@ namespace CliToolTemplate
 
         protected void ShowHelp()
         {
-            string bar = this.Bar;
+            string bar = this.CreateBar( '-' );
             {
                 // アプリケーションのマニュアル情報を生成してコンソールに書き出す。
                 var manual = this.CreateAppManual();
@@ -171,6 +168,15 @@ namespace CliToolTemplate
         protected abstract AppManual CreateAppManual();
         
         protected abstract void Execute(Arguments arguments);
+
+        #region CreateBar
+
+        protected string CreateBar(char barchar)
+        {
+            return new string( barchar, this.Width );
+        }
+
+        #endregion
 
         #region OnExit / OnError
 
