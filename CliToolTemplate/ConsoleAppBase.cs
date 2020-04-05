@@ -32,7 +32,7 @@ namespace CliToolTemplate
 
 
         public char BarChar { get; set; } = '-';
-        public string Bar { get { return new string( this.BarChar, this.width ); } }
+        public string Bar { get { return new string( this.BarChar, this.Width ); } }
 
         public const string DEFAULT_EXIT_MESSAGE = "press any key to exit.";
         private string onExitMessage = DEFAULT_EXIT_MESSAGE;
@@ -103,7 +103,7 @@ namespace CliToolTemplate
             this.OnExit();
         }
 
-        private void ShowApplicationInfo()
+        protected void ShowApplicationInfo()
         {
             string bar = this.Bar;
 
