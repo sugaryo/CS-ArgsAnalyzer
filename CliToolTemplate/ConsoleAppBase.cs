@@ -92,13 +92,7 @@ namespace CliToolTemplate
                     Console.WriteLine( "help mode." );
                     this.ShowApplicationInfo();
                 }
-                // ■パラメータなしでオプションのみ指定されている場合。
-                else if ( this.arguments.IsParameterless )
-                {
-                    Console.WriteLine( "only options." );
-                    this.ExecuteNoData( this.arguments );
-                }
-                // ■パラメータが指定されている場合。
+                // ■何かしらパラメータかオプションがある場合。
                 else
                 {
                     this.Execute( this.arguments );
@@ -115,7 +109,6 @@ namespace CliToolTemplate
         protected void ShowApplicationInfo()
         {
             string bar = this.Bar;
-
             {
                 // アプリケーションのマニュアル情報を生成してコンソールに書き出す。
                 var manual = this.CreateAppManual();
@@ -170,11 +163,7 @@ namespace CliToolTemplate
             // デフォルト実装では取り敢えず h help が含まれていたらヘルプモードにする。
             return arguments.Have( "h", "help" );
         }
-
-        private void ExecuteNoData(Arguments arguments)
-        {
-#warning TODO：入力パラメータを画面から受け取る、対話形式処理からExecuteに流す。
-        }
+        
 
         protected abstract void Execute(Arguments arguments);
 
