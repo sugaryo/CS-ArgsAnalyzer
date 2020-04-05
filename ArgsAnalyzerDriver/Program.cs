@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArgsAnalyzer;
-using static ArgsAnalyzer.Options;
+using ArgsAnalyzer.Data;
 
 namespace ArgsAnalyzerDriver
 {
