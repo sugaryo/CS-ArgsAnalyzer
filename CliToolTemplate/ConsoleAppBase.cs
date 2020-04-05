@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ArgsAnalyzer;
+using CliToolTemplateSample.Description;
 
 namespace CliToolTemplate
 {
@@ -104,8 +105,57 @@ namespace CliToolTemplate
 
         private void ShowApplicationInfo()
         {
-#warning TODO：コマンド情報を生成、表示する処理。
+            string bar = this.Bar;
+
+            Console.WriteLine( "no parameter or options." );
+            {
+                // アプリケーションのマニュアル情報を生成してコンソールに書き出す。
+                var manual = this.CreateAppManual();
+
+                if ( null != manual.Summary )
+                {
+                    Console.WriteLine( bar );
+                    IndentWrite( 0, "SUMMARY:" );
+
+                    int indent = 1;
+                    indent += IndentWrite( indent, manual.Summary.Label )        ? 1 : 0;
+                    indent += IndentWrite( indent, manual.Summary.Text.lines() ) ? 1 : 0;
+                }
+
+                if ( null != manual.MainParameter )
+                {
+                    Console.WriteLine( bar );
+                    IndentWrite( 0, "PARAMETER:" );
+
+                    int indent = 1;
+                    indent += IndentWrite( indent, manual.MainParameter.Label )        ? 1 : 0;
+                    indent += IndentWrite( indent, manual.MainParameter.Text.lines() ) ? 1 : 0;
+                }
+
+                if ( null != manual.Options && 0 < manual.Options.Count )
+                {
+                    Console.WriteLine( bar );
+#warning TODO：あとで折り返しの出力ルールを複数パターン用意してMode列挙体で指定する。
+
+                    int mxlenb = manual.Options.AsEnumerable().Select( x => x.Label.vbLenB() ).Max();
+
+                    IndentWrite( 0, "OPTIONS:" );
+                    foreach ( var opt in manual.Options )
+                    {
+                        int lenb = opt.Label.vbLenB();
+                        string tab = new string( ' ', 4 + mxlenb - lenb );
+                        string line 
+                            = opt.Label
+                            + tab
+                            + opt.Text.lines().singlify();
+                        IndentWrite( 1, line );
+                    }
+                }
+            }
+            Console.WriteLine( bar );
         }
+
+        protected abstract AppManual CreateAppManual();
 
         private void ExecuteNoData(Arguments arguments)
         {
@@ -132,6 +182,32 @@ namespace CliToolTemplate
             Console.WriteLine( this.OnErrorMessage );
             Console.WriteLine( ex.Message );
             Console.WriteLine( ex.StackTrace );
+        }
+
+        protected static bool IndentWrite(int level, string line)
+        {
+            // 空文字の場合は書き込みをスキップ。
+            if ( line.isNullOrEmpty() ) return false;
+
+            string indent = new string( ' ', level * 4 );
+
+            Console.Write( indent );
+            Console.WriteLine( line );
+            return true;
+        }
+        protected static bool IndentWrite(int level, string[] lines)
+        {
+            // 空配列の場合は書き込みをスキップ。
+            if ( null == lines || 0 == lines.Length ) return false;
+
+            string indent = new string( ' ', level * 4 );
+
+            foreach ( var line in lines )
+            {
+                Console.Write( indent );
+                Console.WriteLine( line );
+            }
+            return true;
         }
     }
 }
