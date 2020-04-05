@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using ArgsAnalyzer;
 using CliToolTemplateSample.Description;
+using static CliToolTemplate.ConsoleAppUtil;
 
 namespace CliToolTemplate
 {
@@ -201,31 +202,5 @@ namespace CliToolTemplate
 
         #endregion
 
-
-        protected static bool IndentWrite(int level, string line)
-        {
-            // 空文字の場合は書き込みをスキップ。
-            if ( line.isNullOrEmpty() ) return false;
-
-            string indent = new string( ' ', level * 4 );
-
-            Console.Write( indent );
-            Console.WriteLine( line );
-            return true;
-        }
-        protected static bool IndentWrite(int level, string[] lines)
-        {
-            // 空配列の場合は書き込みをスキップ。
-            if ( null == lines || 0 == lines.Length ) return false;
-
-            string indent = new string( ' ', level * 4 );
-
-            foreach ( var line in lines )
-            {
-                Console.Write( indent );
-                Console.WriteLine( line );
-            }
-            return true;
-        }
     }
 }
