@@ -33,8 +33,12 @@ namespace ArgsAnalyzerDriver
             //   /d
             //   -x=111
             //   /y=222,333,444
+            //   -date=2020-12-31
+            //   /time=23:59:59
+            //   "C:/hoge/moge/pi-yo"
+            //   "C:\Program Files"
             // ■ コピペ用：
-            // hoge moge piyo -a -b /c /d -x=111 /y=222,333,444
+            // hoge moge piyo -a -b /c /d -x=111 /y=222,333,444 -date=2020-12-31 /time=23:59:59 "C:/hoge/moge/pi-yo" "C:\Program Files"
             Arguments arguments = args.parse();
 
             // 引数の列挙
