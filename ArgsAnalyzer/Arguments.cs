@@ -16,14 +16,14 @@ namespace ArgsAnalyzer
 		/// <summary>パラメータ</summary>
 		private readonly List<string> parameters = new List<string>();
 
-#warning FIXME：OptionでMap作るよりはValuesとPropertiesで分けた方が良い気がしてきた。
-        /// <summary>オプション指定の管理マップ</summary>
-        private readonly Dictionary<string, Option> map = new Dictionary<string, Option>();
+        private readonly List<Option> options = new List<Option>();
 
+        private readonly Dictionary<string, ValueOption> values = new Dictionary<string, ValueOption>();
+        private readonly Dictionary<string, PropertyOption> properties = new Dictionary<string, PropertyOption>();
 
         #region [propg] Parameterless / NoOptions / Empty
         public bool IsParameterless { get{ return 0 == this.parameters.Count; } }
-        public bool IsNoOptions     { get{ return 0 == this.map.Count; } }
+        public bool IsNoOptions     { get{ return 0 == this.options.Count; } }
         public bool IsEmpty         { get{ return this.IsParameterless && this.IsNoOptions; } }
         #endregion
 
@@ -104,28 +104,40 @@ namespace ArgsAnalyzer
 				#region オプション
 				string option = arg.TrimStart( '/', '-' );
 
-				Option o;
-				if ( option.Contains( ":" ) )
+#warning FIXME：プロパティ型のパース処理がイケてない（バグってる）ので修正する。
+
+                if ( option.Contains( ":" ) )
 				{
 					string[] token = option.split( ":" );
 
-					o = new PropertyOption( token[0], token[1] );
-				}
+                    PropertyOption prop = new PropertyOption( token[0], token[1] );
+                    if ( !this.properties.ContainsKey( prop.key ) )
+                    {
+                        this.properties.Add( prop.key, prop );
+                        this.options.Add( prop );
+                    }
+                }
 				else if ( option.Contains( "=" ) )
 				{
 					string[] token = option.split( "=" );
 
-					o = new PropertyOption( token[0], token[1] );
-				}
+					PropertyOption prop = new PropertyOption( token[0], token[1] );
+                    if ( !this.properties.ContainsKey( prop.Name ) )
+                    {
+                        this.properties.Add( prop.Name, prop );
+                        this.options.Add( prop );
+                    }
+                }
 				else
 				{
-					o = new ValueOption( option );
+					ValueOption value = new ValueOption( option );
+                    if ( !this.values.ContainsKey( value.Name ) )
+                    {
+                        this.values.Add( value.Name, value );
+                        this.options.Add( value );
+                    }
 				}
 				
-				if ( !this.map.ContainsKey( o.Name ) )
-				{
-					this.map.Add( o.Name, o );
-				}
 				#endregion
 			}
 			else
@@ -146,7 +158,9 @@ namespace ArgsAnalyzer
 		public void Clear()
 		{
 			this.parameters.Clear();
-			this.map.Clear();
+			this.options.Clear();
+            this.properties.Clear();
+            this.values.Clear();
 		}
 		#endregion
 
@@ -162,10 +176,12 @@ namespace ArgsAnalyzer
 		/// </returns>
 		public bool Have( params string[] names )
 		{
-			foreach ( var name in names )
-			{
-				if ( this.map.ContainsKey( name ) ) return true;
-			}
+#warning FIXME：HaveはAnyとAllの２種類用意したほうが良い。
+            foreach ( var name in names )
+            {
+                if ( this.properties.ContainsKey( name ) ) return true;
+                if ( this.values.ContainsKey( name ) ) return true;
+            }
 			return false;
 		}
 		/// <summary>
@@ -184,15 +200,11 @@ namespace ArgsAnalyzer
 		{
 			foreach ( var name in names )
 			{
-				if ( this.map.ContainsKey( name ) )
+				if ( this.properties.ContainsKey( name ) )
 				{
-					Option o = this.map[name];
-					if ( o is PropertyOption )
-					{
-						PropertyOption prop = o as PropertyOption;
-						value = prop.value;
-						return true;
-					}
+                    PropertyOption prop = this.properties[name];
+					value = prop.value;
+					return true;
 				}
 			}
 			value = null;
@@ -219,7 +231,7 @@ namespace ArgsAnalyzer
 		/// <returns>オプション指定列挙</returns>
 		public IEnumerable<Option> AsOptions()
 		{
-			return this.map.Values.AsEnumerable();
+			return this.options.AsEnumerable();
 		}
 		/// <summary>
 		/// 「値型オプション指定」の列挙を返します。
@@ -227,9 +239,7 @@ namespace ArgsAnalyzer
 		/// <returns>値型オプション指定列挙</returns>
 		public IEnumerable<ValueOption> AsValueOptions()
 		{
-			return this.AsOptions()
-				.Where( x => x is ValueOption )
-				.Select( x => x as ValueOption );
+            return this.values.Values.AsEnumerable();
 		}
 		/// <summary>
 		/// 「属性型オプション指定」の列挙を返します。
@@ -237,9 +247,7 @@ namespace ArgsAnalyzer
 		/// <returns>属性型オプション指定列挙</returns>
 		public IEnumerable<PropertyOption> AsPropertyOptions()
 		{
-			return this.AsOptions()
-				.Where( x => x is PropertyOption )
-				.Select( x => x as PropertyOption );
+            return this.properties.Values.AsEnumerable();
 		}
 
 		#endregion
