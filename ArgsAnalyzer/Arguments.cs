@@ -101,46 +101,36 @@ namespace ArgsAnalyzer
 		{
 			if ( arg.startsWith( "/", "-" ) )
 			{
-				#region オプション
+				#region オプションのパース
 				string option = arg.TrimStart( '/', '-' );
 
-#warning FIXME：プロパティ型のパース処理がイケてない（バグってる）ので修正する。
 
-                if ( option.Contains( ":" ) )
-				{
-					string[] token = option.split( ":" );
-
+                // ■ xxx=xxx aaa:bbb 形式の場合はプロパティオプション
+                string[] token = { null, null };
+                if ( option.slice( out token[0], out token[1], '=', ':' ) )
+                {
                     PropertyOption prop = new PropertyOption( token[0], token[1] );
-                    if ( !this.properties.ContainsKey( prop.key ) )
-                    {
-                        this.properties.Add( prop.key, prop );
-                        this.options.Add( prop );
-                    }
-                }
-				else if ( option.Contains( "=" ) )
-				{
-					string[] token = option.split( "=" );
 
-					PropertyOption prop = new PropertyOption( token[0], token[1] );
                     if ( !this.properties.ContainsKey( prop.Name ) )
                     {
                         this.properties.Add( prop.Name, prop );
                         this.options.Add( prop );
                     }
                 }
-				else
-				{
-					ValueOption value = new ValueOption( option );
+                // ■プロパティ形式でない場合は単なるスイッチオプション。
+                else
+                {
+                    ValueOption value = new ValueOption( option );
                     if ( !this.values.ContainsKey( value.Name ) )
                     {
                         this.values.Add( value.Name, value );
                         this.options.Add( value );
                     }
-				}
-				
-				#endregion
-			}
-			else
+                }
+
+                #endregion
+            }
+            else
 			{
 				#region パラメータ
 				this.parameters.Add( arg );

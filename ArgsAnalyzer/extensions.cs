@@ -32,6 +32,27 @@ namespace ArgsAnalyzer
             return s.Split( by, option );
         }
 
+        public static bool slice(this string s,
+                out string before,
+                out string after,
+                params char[] by)
+        {
+            for ( int i = 0; i < s.Length; i++ )
+            {
+                char c = s[i];
+
+                if ( by.Contains( c ) )
+                {
+                    before = s.Substring( 0, i );
+                    after = s.Substring( i + 1 );
+                    return true;
+                }
+            }
+            before = s;
+            after = "";
+            return false;
+        }
+
         public static Arguments parse(this string[] args)
         {
             var arguments = new Arguments();
