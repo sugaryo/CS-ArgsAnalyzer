@@ -8,6 +8,32 @@ namespace CliToolTemplate
 {
     public static class extensions
     {
+        // いわゆる S-JIS エンコ
+        private static readonly Encoding MS932 = Encoding.GetEncoding( 932 );
+
+        public static string[] lines(this string s)
+        {
+            return s.Split( new[] { "\r\n" }, StringSplitOptions.None );
+        }
+
+        public static string singlify(this string[] lines)
+        {
+            var sb = new StringBuilder();
+            foreach ( var line in lines )
+            {
+                sb.Append( line.Trim() );
+            }
+            return sb.ToString();
+        }
+
+
+        public static int vbLenB(this string s)
+        {
+            return MS932.GetByteCount( s );
+        }
+
+    
+
         public static bool isNull(this string s)
         {
             return null == s;
