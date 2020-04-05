@@ -65,6 +65,7 @@ namespace CliToolTemplate
         #endregion
 
 
+        #region + Execute
         public void Execute()
         {
             try
@@ -84,13 +85,13 @@ namespace CliToolTemplate
                 if ( this.arguments.IsEmpty )
                 {
                     Console.WriteLine( "no parameter or options." );
-                    this.ShowApplicationInfo();
+                    this.ShowHelp();
                 }
                 // ■ヘルプモードの場合。
                 else if ( this.IsHelpMode( this.arguments ) )
                 {
                     Console.WriteLine( "help mode." );
-                    this.ShowApplicationInfo();
+                    this.ShowHelp();
                 }
                 // ■何かしらパラメータかオプションがある場合。
                 else
@@ -105,8 +106,17 @@ namespace CliToolTemplate
 
             this.OnExit();
         }
+        #endregion
 
-        protected void ShowApplicationInfo()
+        #region IsHelpMode / ShowHelp
+
+        protected virtual bool IsHelpMode(Arguments arguments)
+        {
+            // デフォルト実装では取り敢えず h help が含まれていたらヘルプモードにする。
+            return arguments.Have( "h", "help" );
+        }
+
+        protected void ShowHelp()
         {
             string bar = this.Bar;
             {
@@ -156,17 +166,13 @@ namespace CliToolTemplate
             Console.WriteLine( bar );
         }
 
+        #endregion
+
         protected abstract AppManual CreateAppManual();
-
-        protected virtual bool IsHelpMode(Arguments arguments)
-        {
-            // デフォルト実装では取り敢えず h help が含まれていたらヘルプモードにする。
-            return arguments.Have( "h", "help" );
-        }
         
-
         protected abstract void Execute(Arguments arguments);
 
+        #region OnExit / OnError
 
         protected virtual void OnExit()
         {
@@ -186,6 +192,9 @@ namespace CliToolTemplate
             Console.WriteLine( ex.Message );
             Console.WriteLine( ex.StackTrace );
         }
+
+        #endregion
+
 
         protected static bool IndentWrite(int level, string line)
         {
