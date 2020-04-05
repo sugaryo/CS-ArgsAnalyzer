@@ -80,16 +80,25 @@ namespace CliToolTemplate
 
 
 
+                // ■パラメータもオプションもない、正真正銘 psvm args が空の場合。
                 if ( this.arguments.IsEmpty )
                 {
-                    // パラメータが完全に無かった場合はアプリケーションの説明を表示する。
+                    Console.WriteLine( "no parameter or options." );
                     this.ShowApplicationInfo();
                 }
+                // ■ヘルプモードの場合。
+                else if ( this.IsHelpMode( this.arguments ) )
+                {
+                    Console.WriteLine( "help mode." );
+                    this.ShowApplicationInfo();
+                }
+                // ■パラメータなしでオプションのみ指定されている場合。
                 else if ( this.arguments.IsParameterless )
                 {
-                    // オプション指定はあるがパラメータがない場合はNoData
-                    this.ExecuteNoData( arguments );
+                    Console.WriteLine( "only options." );
+                    this.ExecuteNoData( this.arguments );
                 }
+                // ■パラメータが指定されている場合。
                 else
                 {
                     this.Execute( this.arguments );
@@ -107,7 +116,6 @@ namespace CliToolTemplate
         {
             string bar = this.Bar;
 
-            Console.WriteLine( "no parameter or options." );
             {
                 // アプリケーションのマニュアル情報を生成してコンソールに書き出す。
                 var manual = this.CreateAppManual();
@@ -156,6 +164,12 @@ namespace CliToolTemplate
         }
 
         protected abstract AppManual CreateAppManual();
+
+        protected virtual bool IsHelpMode(Arguments arguments)
+        {
+            // デフォルト実装では取り敢えず h help が含まれていたらヘルプモードにする。
+            return arguments.Have( "h", "help" );
+        }
 
         private void ExecuteNoData(Arguments arguments)
         {
