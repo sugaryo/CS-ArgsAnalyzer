@@ -77,10 +77,21 @@ namespace CliToolTemplate
                 }
 
 
-#warning TODO：この辺に幾つか基本処理の分岐を作り込む。
-                this.Execute( this.arguments );
 
-
+                if ( this.arguments.IsEmpty )
+                {
+                    // パラメータが完全に無かった場合はアプリケーションの説明を表示する。
+                    this.ShowApplicationInfo();
+                }
+                else if ( this.arguments.IsParameterless )
+                {
+                    // オプション指定はあるがパラメータがない場合はNoData
+                    this.ExecuteNoData( arguments );
+                }
+                else
+                {
+                    this.Execute( this.arguments );
+                }
             }
             catch ( Exception ex )
             {
@@ -90,11 +101,22 @@ namespace CliToolTemplate
             this.OnExit();
         }
 
+        private void ShowApplicationInfo()
+        {
+#warning TODO：コマンド情報を生成、表示する処理。
+        }
+
+        private void ExecuteNoData(Arguments arguments)
+        {
+#warning TODO：入力パラメータを画面から受け取る、対話形式処理からExecuteに流す。
+        }
+
         protected abstract void Execute(Arguments arguments);
 
 
         protected virtual void OnExit()
         {
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine( this.OnExitMessage );
@@ -103,6 +125,9 @@ namespace CliToolTemplate
 
         protected virtual void OnError(Exception ex)
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine( this.OnErrorMessage );
             Console.WriteLine( ex.Message );
             Console.WriteLine( ex.StackTrace );
