@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using CliToolTemplate;
 using ArgsAnalyzer;
 using CliToolTemplateSample.Description;
+using CliToolTemplate.Utility;
+
 
 namespace CliToolTemplateSample
 {
@@ -56,7 +58,34 @@ namespace CliToolTemplateSample
 
         protected override void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            var wizzard = new InputWizzard();
+
+            string mode = "";
+            if( wizzard.TryInputOrPath(
+                    new[] {
+                        "適当に入力するか、ファイル・フォルダのパスを指定してください。",
+                        @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
+                    },
+                    input => {
+                        mode = "string";
+                        Console.WriteLine( $"{input}が入力されました" );
+                    },
+                    file => {
+                        mode = "file";
+                        Console.WriteLine( $"ファイル[{file.FullName}]が渡されました。" );
+                    },
+                    dir => {
+                        mode = "folder";
+                        Console.WriteLine( $"フォルダ[{dir.FullName}]が渡されました。" );
+                    }
+                ) )
+            {
+                Console.WriteLine( $"mode={mode}" );
+            }
+            else
+	        {
+                Console.WriteLine( "入力がキャンセルされました" );
+            }
         }
     }
 }

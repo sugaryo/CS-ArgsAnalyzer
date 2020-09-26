@@ -21,9 +21,13 @@ namespace CliToolTemplate.Utility
             this.CancelKeywords = new List<string>( cancelKeywords );
         }
 
-        public bool TryInput(string message, out string value)
+        public bool TryInput(IEnumerable<string> messages, out string value)
         {
-            Console.WriteLine( message );
+            foreach ( var message in messages )
+            {
+                Console.WriteLine( message );
+            }
+            Console.Write( "> " );
             string str = Console.ReadLine();
 
             if ( this.CancelKeywords.Contains( str ) )
@@ -38,13 +42,21 @@ namespace CliToolTemplate.Utility
             }
         }
 
-        public bool TryInputOrPath(string message, Action<string> input, Action<string> path)
+        public bool TryInputOrPath(IEnumerable<string> messages, Action<string> input, Action<string> path)
         {
-            return this.TryInputOrPath( message, input, f => path( f ), d => path( d ) );
+            return this.TryInputOrPath( 
+                messages,
+                input,
+                (FileInfo f) => path( f.FullName ),
+                (DirectoryInfo d) => path( d.FullName ) );
         }
-        public bool TryInputOrPath(string message, Action<string> input, Action<string> file, Action<string> dir)
+        public bool TryInputOrPath(IEnumerable<string> messages, Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir)
         {
-            Console.WriteLine( message );
+            foreach ( var message in messages )
+            {
+                Console.WriteLine( message );
+            }
+            Console.Write( "> " );
             string str = Console.ReadLine();
 
             if ( this.CancelKeywords.Contains( str ) )
@@ -54,13 +66,13 @@ namespace CliToolTemplate.Utility
 
             if ( File.Exists( str ) )
             {
-                file( str );
+                file( new FileInfo( str ) );
                 return true;
             }
 
             if ( Directory.Exists( str ) )
             {
-                dir( str );
+                dir( new DirectoryInfo( str ) );
                 return true;
             }
 
