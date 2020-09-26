@@ -13,7 +13,7 @@ namespace CliToolTemplate
 
         public static string[] lines(this string s)
         {
-            return s.Split( new[] { "\r\n" }, StringSplitOptions.None );
+            return s.Split( new[] { "\r\n", "\n" }, StringSplitOptions.None );
         }
 
         public static string singlify(this string[] lines)
