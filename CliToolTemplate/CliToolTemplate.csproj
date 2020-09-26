@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleAppBase.cs" />
-    <Compile Include="ConsoleAppUtil.cs" />
+    <Compile Include="Utility\ConsoleAppUtil.cs" />
     <Compile Include="Description\AppManual.cs" />
     <Compile Include="Description\DescriptionInfo.cs" />
     <Compile Include="extensions.cs" />

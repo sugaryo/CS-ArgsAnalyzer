@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CliToolTemplate
+namespace CliToolTemplate.Utility
 {
     public static class ConsoleAppUtil
     {
