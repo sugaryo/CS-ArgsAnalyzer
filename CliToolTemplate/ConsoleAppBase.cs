@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ArgsAnalyzer;
+using CliToolTemplate.Utility;
 using CliToolTemplateSample.Description;
-using static CliToolTemplate.ConsoleAppUtil;
 
 namespace CliToolTemplate
 {
@@ -117,38 +117,50 @@ namespace CliToolTemplate
         protected void ShowHelp()
         {
             string bar = this.CreateBar( '-' );
+            var indent = new IndentWriter();
             {
                 // アプリケーションのマニュアル情報を生成してコンソールに書き出す。
                 var manual = this.CreateAppManual();
 
+                #region manual.summary
                 if ( null != manual.Summary )
                 {
-                    Console.WriteLine( bar );
-                    IndentWrite( 0, "SUMMARY:" );
+                    indent.Level = 0;
+                    indent.Write( bar );
+                    indent.Write( "SUMMARY:" );
 
-                    int indent = 1;
-                    indent += IndentWrite( indent, manual.Summary.Label )        ? 1 : 0;
-                    indent += IndentWrite( indent, manual.Summary.Text.lines() ) ? 1 : 0;
+                    indent.Level++;
+                    indent.Write( 
+                        manual.Summary.Label,
+                        manual.Summary.Text.lines() );
                 }
+                #endregion
 
+                #region manual.parameter
                 if ( null != manual.MainParameter )
                 {
-                    Console.WriteLine( bar );
-                    IndentWrite( 0, "PARAMETER:" );
+                    indent.Level = 0;
+                    indent.Write( bar );
+                    indent.Write( "PARAMETER:" );
 
-                    int indent = 1;
-                    indent += IndentWrite( indent, manual.MainParameter.Label )        ? 1 : 0;
-                    indent += IndentWrite( indent, manual.MainParameter.Text.lines() ) ? 1 : 0;
+                    indent.Level++;
+                    indent.Write(
+                        manual.MainParameter.Label,
+                        manual.MainParameter.Text.lines() );
                 }
+                #endregion
 
+                #region manual.options
                 if ( null != manual.Options && 0 < manual.Options.Count )
                 {
-                    Console.WriteLine( bar );
 #warning TODO：あとで折り返しの出力ルールを複数パターン用意してMode列挙体で指定する。
-
                     int mxlenb = manual.Options.AsEnumerable().Select( x => x.Label.vbLenB() ).Max();
 
-                    IndentWrite( 0, "OPTIONS:" );
+
+                    indent.Level = 0;
+                    indent.Write( bar );
+                    indent.Write( "OPTIONS:" );
+                    indent.Level++;
                     foreach ( var opt in manual.Options )
                     {
                         int lenb = opt.Label.vbLenB();
@@ -157,11 +169,15 @@ namespace CliToolTemplate
                             = opt.Label
                             + tab
                             + opt.Text.lines().singlify();
-                        IndentWrite( 1, line );
+
+                        indent.Write( line );
                     }
                 }
+                #endregion
+
+                indent.Level = 0;
+                indent.Write( bar );
             }
-            Console.WriteLine( bar );
         }
 
         #endregion
