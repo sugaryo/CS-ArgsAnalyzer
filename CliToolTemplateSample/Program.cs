@@ -10,7 +10,7 @@ namespace CliToolTemplateSample
     {
         static void Main(string[] args)
         {
-            var app = new SampleApp( new[]{ "-h" } );
+            var app = new SampleApp( args );
             app.Execute();
         }
     }
