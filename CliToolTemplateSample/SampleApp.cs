@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using CliToolTemplate;
 using ArgsAnalyzer;
-using CliToolTemplateSample.Description;
+using CliToolTemplate.Description;
 using CliToolTemplate.Utility;
 
 
