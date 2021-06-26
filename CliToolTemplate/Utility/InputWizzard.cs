@@ -11,7 +11,7 @@ namespace CliToolTemplate.Utility
     {
         public List<string> CancelKeywords { get; set; }
 
-
+        #region ctor
         public InputWizzard()
         {
             this.CancelKeywords = new List<string>() { "exit", "cancel" };
@@ -20,17 +20,30 @@ namespace CliToolTemplate.Utility
         {
             this.CancelKeywords = new List<string>( cancelKeywords );
         }
+        #endregion
 
+
+        #region TryInput
+        public bool TryInput(IEnumerable<string> messages, out string value, TabCompletion complete)
+        {
+            return this.TryInputCore( messages, out value, complete.ReadLine );
+        }
         public bool TryInput(IEnumerable<string> messages, out string value)
+        {
+            return this.TryInputCore( messages, out value, Console.ReadLine );
+        }
+        private bool TryInputCore(
+                IEnumerable<string> messages, 
+                out string value, 
+                Func<string> readline)
         {
             foreach ( var message in messages )
             {
                 Console.WriteLine( message );
             }
-            Console.Write( "> " );
-            string str = Console.ReadLine();
+            string str = readline();
 
-            if ( this.CancelKeywords.Contains( str ) )
+            if ( null == str || this.CancelKeywords.Contains( str ) )
             {
                 value = null;
                 return false;
@@ -41,25 +54,66 @@ namespace CliToolTemplate.Utility
                 return true;
             }
         }
+        #endregion
 
-        public bool TryInputOrPath(IEnumerable<string> messages, Action<string> input, Action<string> path)
+        #region TryInputOrPath
+        
+        public bool TryInputOrPath(
+                IEnumerable<string> messages, 
+                Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir, TabCompletion complete)
         {
-            return this.TryInputOrPath( 
-                messages,
-                input,
-                (FileInfo f) => path( f.FullName ),
-                (DirectoryInfo d) => path( d.FullName ) );
+            return this.TryInputOrPathCore( messages, input, file, dir, complete.ReadLine );
         }
-        public bool TryInputOrPath(IEnumerable<string> messages, Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir)
+        public bool TryInputOrPath(
+            IEnumerable<string> messages,
+            Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir)
+        {
+            return this.TryInputOrPathCore( messages, input, file, dir, Console.ReadLine );
+        }
+        
+        public bool TryInputOrPath(
+                IEnumerable<string> messages, 
+                Action<string> input, Action<string> path, TabCompletion complete)
+        {
+            void FileCallback(FileInfo f)
+            {
+                path( f.FullName );
+            }
+            void DirCallback(DirectoryInfo d)
+            {
+                path( d.FullName );
+            }
+            return this.TryInputOrPathCore( messages, input, FileCallback, DirCallback, complete.ReadLine );
+        }
+        public bool TryInputOrPath(
+                IEnumerable<string> messages, 
+                Action<string> input, Action<string> path)
+        {
+            void FileCallback(FileInfo f)
+            {
+                path( f.FullName );
+            }
+            void DirCallback(DirectoryInfo d)
+            {
+                path( d.FullName );
+            }
+            return this.TryInputOrPathCore( messages, input, FileCallback, DirCallback, Console.ReadLine );
+        }
+
+        private bool TryInputOrPathCore(
+                IEnumerable<string> messages, 
+                Action<string> input, 
+                Action<FileInfo> file, 
+                Action<DirectoryInfo> dir, 
+                Func<string> readline)
         {
             foreach ( var message in messages )
             {
                 Console.WriteLine( message );
             }
-            Console.Write( "> " );
-            string str = Console.ReadLine();
+            string str = readline();
 
-            if ( this.CancelKeywords.Contains( str ) )
+            if ( null == str || this.CancelKeywords.Contains( str ) )
             {
                 return false;
             }
@@ -79,5 +133,6 @@ namespace CliToolTemplate.Utility
             input( str );
             return true;
         }
+        #endregion
     }
 }
