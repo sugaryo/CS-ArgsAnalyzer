@@ -102,5 +102,22 @@ namespace CliToolTemplate
         {
             return maximum < value ? maximum : value;
         }
+
+        public static void backspace(this StringBuilder sb, int n = 1)
+        {
+            if ( sb.Length <= n )
+            {
+                sb.Clear();
+            }
+            else
+            {
+                sb.Remove( sb.Length - n, n );
+            }
+        }
+        public static void reset(this StringBuilder sb, string str)
+        {
+            sb.Clear();
+            sb.Append( str );
+        }
     }
 }
