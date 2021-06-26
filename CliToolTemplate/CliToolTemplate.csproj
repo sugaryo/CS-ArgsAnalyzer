@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0D52F3B8-5929-4956-8BB2-F0CF011DD528}</ProjectGuid>
+    <ProjectGuid>{FDFE5D8D-CA42-4EDF-89FC-958195D7A353}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ArgsAnalyzer</RootNamespace>
-    <AssemblyName>ArgsAnalyzer</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>CliToolTemplate</RootNamespace>
+    <AssemblyName>CliToolTemplate</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,20 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments.cs" />
-    <Compile Include="Data\Option.cs" />
-    <Compile Include="Data\PropertyOption.cs" />
-    <Compile Include="Data\ValueOption.cs" />
+    <Compile Include="ConsoleAppBase.cs" />
+    <Compile Include="Utility\ConsoleAppUtil.cs" />
+    <Compile Include="Description\AppManual.cs" />
+    <Compile Include="Description\DescriptionInfo.cs" />
     <Compile Include="extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\IndentWriter.cs" />
+    <Compile Include="Utility\InputWizzard.cs" />
+    <Compile Include="Utility\TabCompletion.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ArgsAnalyzer\ArgsAnalyzer.csproj">
+      <Project>{0d52f3b8-5929-4956-8bb2-f0cf011dd528}</Project>
+      <Name>ArgsAnalyzer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
