@@ -11,6 +11,9 @@ namespace CliToolTemplate.Utility
         /// <summary>入力補完する候補データ</summary>
         private readonly IEnumerable<string> data;
 
+        /// <summary>Functionキーで指定する前方一致リスト</summary>
+        private readonly FunctionKeyContext context = new FunctionKeyContext();
+
         // インデントリスト表示をオプションに変更。（デフォルトオフ）
         public bool Indent { get; set; } = false;
 
@@ -84,7 +87,24 @@ namespace CliToolTemplate.Utility
                     OverWrite( "" );
                     break;
                 #endregion
-                
+
+                #region F1-F12
+                case ConsoleKey.F1:
+                case ConsoleKey.F2:
+                case ConsoleKey.F3:
+                case ConsoleKey.F4:
+                case ConsoleKey.F5:
+                case ConsoleKey.F6:
+                case ConsoleKey.F7:
+                case ConsoleKey.F8:
+                case ConsoleKey.F9:
+                case ConsoleKey.F10:
+                case ConsoleKey.F11:
+                case ConsoleKey.F12:
+                    this.SelectFKC( buff, info.Key );
+                    break;
+                #endregion
+
                 case ConsoleKey.Tab:
                     // TAB 入力だったらここまでの入力で前方一致検索して補完する。
                     this.TabComplete( buff );
@@ -124,6 +144,10 @@ namespace CliToolTemplate.Utility
                 .ToArray();
 
 
+            // ■ Tab 入力する毎にコンテキストを更新する。
+            this.context.Clear();
+
+
             // ■１件（確定）
             if ( 1 == matches.Length )
             {
@@ -140,6 +164,9 @@ namespace CliToolTemplate.Utility
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 foreach ( var m in matches )
                 {
+#warning TODO:ここでF1～F12を表示したいよね。
+                    this.context.Add( m );
+
                     if ( this.Indent )
                     {
                         Console.WriteLine( $"  - {m}" );
@@ -161,6 +188,17 @@ namespace CliToolTemplate.Utility
             {
                 // マッチするものがなかったらこのまま。
             }
+        }
+        private void SelectFKC(StringBuilder buff, ConsoleKey key)
+        {
+            string value = this.context[key];
+
+            // 選択されたファンクションキーに対応する値が無ければ何もしない。
+            if ( null == value ) return;
+
+            // 対応する値が取れたらその値で入力補完する。
+            buff.reset( value );
+            OverWrite( buff.ToString() );
         }
         #endregion
         
