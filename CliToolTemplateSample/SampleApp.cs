@@ -58,15 +58,24 @@ namespace CliToolTemplateSample
 
         protected override void Execute(Arguments arguments)
         {
-            var wizzard = new InputWizzard();
-            Demo1( wizzard );
-            Demo2( wizzard, arguments );
+            try
+            {
+                var wizzard = new InputWizzard();
+                Demo1( wizzard );
+                Demo2( wizzard, arguments );
+            }
+            finally
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         private static void Demo1(InputWizzard wizzard)
         {
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine( "■機能１：入力振り分け（文字列、ファイルパス、フォルダ）■" );
+            Console.ForegroundColor = ConsoleColor.White;
 
             string mode = "";
             if ( wizzard.TryInputOrPath(
@@ -91,19 +100,24 @@ namespace CliToolTemplateSample
                     }
                 ) )
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( $"mode={mode}" );
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( "入力がキャンセルされました" );
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
         private static void Demo2(InputWizzard wizzard, Arguments arguments)
         {
             Console.WriteLine();
-            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine( "■機能２：Tab補完入力のデモ動作■" );
+            Console.ForegroundColor = ConsoleColor.White;
 
             TabCompletion tab = new TabCompletion( arguments.AsParameters() );
 
@@ -115,11 +129,15 @@ namespace CliToolTemplateSample
                     },
                 out value, tab ) )
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( $"入力 : {value}" );
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( "入力がキャンセルされました" );
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
     }
