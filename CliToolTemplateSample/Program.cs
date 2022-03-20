@@ -23,6 +23,9 @@ namespace CliToolTemplateSample
                 "x:moge",
                 "x:piyo",
                 "x:poyo",
+                "aaax",
+                "aaay",
+                "aaaz",
             };
 
             var app = new SampleApp( parameters );
