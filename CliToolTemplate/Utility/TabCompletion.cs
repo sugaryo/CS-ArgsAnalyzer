@@ -161,20 +161,31 @@ namespace CliToolTemplate.Utility
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( $" [入力選択]" );
-                Console.ForegroundColor = ConsoleColor.Cyan;
+
+                int length = matches.Select( x => x.Length ).Max();
+
                 foreach ( var m in matches )
                 {
-#warning TODO:ここでF1～F12を表示したいよね。
-                    this.context.Add( m );
-
+                    // 前方一致した候補を表示。
+                    string value = m.PadRight( length );
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     if ( this.Indent )
                     {
-                        Console.WriteLine( $"  - {m}" );
+                        Console.Write( $"  - {value}" );
                     }
                     else
                     {
-                        Console.WriteLine( $"{m}" );
+                        Console.Write( $"{value}" );
                     }
+
+                    // ファンクションキーが設定されていたら表示。
+                    var key = this.context.Add( m );
+                    if ( key != ConsoleKey.NoName )
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write( $"    [{key}]" );
+                    }
+                    Console.WriteLine();
                 }
                 Console.ResetColor();
 
