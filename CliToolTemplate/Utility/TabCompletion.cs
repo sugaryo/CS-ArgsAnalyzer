@@ -11,6 +11,9 @@ namespace CliToolTemplate.Utility
         /// <summary>入力補完する候補データ</summary>
         private readonly IEnumerable<string> data;
 
+        // インデントリスト表示をオプションに変更。（デフォルトオフ）
+        public bool Indent { get; set; } = false;
+
         #region ctor
         public TabCompletion(IEnumerable<string> data)
         {
@@ -137,7 +140,14 @@ namespace CliToolTemplate.Utility
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 foreach ( var m in matches )
                 {
-                    Console.WriteLine( $"  - {m}" );
+                    if ( this.Indent )
+                    {
+                        Console.WriteLine( $"  - {m}" );
+                    }
+                    else
+                    {
+                        Console.WriteLine( $"{m}" );
+                    }
                 }
                 Console.ResetColor();
 
