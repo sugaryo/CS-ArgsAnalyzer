@@ -10,7 +10,22 @@ namespace CliToolTemplateSample
     {
         static void Main(string[] args)
         {
-            var app = new SampleApp( args );
+            string[] parameters = new[] {
+                "hoge-foo",
+                "hoge-bar",
+                "hoge-baz",
+                "moge",
+                "mogemoge",
+                "mogemogemoge",
+                "piyo",
+                "piyopiyo",
+                "x:hoge",
+                "x:moge",
+                "x:piyo",
+                "x:poyo",
+            };
+
+            var app = new SampleApp( parameters );
             app.Execute();
         }
     }

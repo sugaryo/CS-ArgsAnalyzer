@@ -59,22 +59,33 @@ namespace CliToolTemplateSample
         protected override void Execute(Arguments arguments)
         {
             var wizzard = new InputWizzard();
+            Demo1( wizzard );
+            Demo2( wizzard, arguments );
+        }
+
+        private static void Demo1(InputWizzard wizzard)
+        {
+            Console.WriteLine();
+            Console.WriteLine( "■機能１：入力振り分け（文字列、ファイルパス、フォルダ）■" );
 
             string mode = "";
-            if( wizzard.TryInputOrPath(
+            if ( wizzard.TryInputOrPath(
                     new[] {
                         "適当に入力するか、ファイル・フォルダのパスを指定してください。",
                         @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
                     },
-                    input => {
+                    input =>
+                    {
                         mode = "string";
                         Console.WriteLine( $"{input}が入力されました" );
                     },
-                    file => {
+                    file =>
+                    {
                         mode = "file";
                         Console.WriteLine( $"ファイル[{file.FullName}]が渡されました。" );
                     },
-                    dir => {
+                    dir =>
+                    {
                         mode = "folder";
                         Console.WriteLine( $"フォルダ[{dir.FullName}]が渡されました。" );
                     }
@@ -83,7 +94,31 @@ namespace CliToolTemplateSample
                 Console.WriteLine( $"mode={mode}" );
             }
             else
-	        {
+            {
+                Console.WriteLine( "入力がキャンセルされました" );
+            }
+        }
+
+        private static void Demo2(InputWizzard wizzard, Arguments arguments)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine( "■機能２：Tab補完入力のデモ動作■" );
+
+            TabCompletion tab = new TabCompletion( arguments.AsParameters() );
+
+            string value;
+            if ( wizzard.TryInput( 
+                new[] {
+                        "Tab補完入力のデモ動作。",
+                        @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
+                    },
+                out value, tab ) )
+            {
+                Console.WriteLine( $"入力 : {value}" );
+            }
+            else
+            {
                 Console.WriteLine( "入力がキャンセルされました" );
             }
         }
