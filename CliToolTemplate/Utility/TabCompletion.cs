@@ -160,7 +160,7 @@ namespace CliToolTemplate.Utility
             else if ( 1 < matches.Length )
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine( $" [入力選択]" );
+                Console.WriteLine( $" [TAB補完]" );
 
                 int length = matches.Select( x => x.Length ).Max();
 
