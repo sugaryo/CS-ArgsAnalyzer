@@ -110,6 +110,11 @@ namespace CliToolTemplate.Utility
                     this.TabComplete( buff );
                     break;
 
+                case ConsoleKey.End:
+                    // End 入力だったら、入力文字をバラして TabComplete を繰り返す。
+                    this.TabRecursive( buff );
+                    break;
+
                 default:
                     char c = info.KeyChar;
                     if ( Char.IsControl( c ) )
@@ -200,6 +205,32 @@ namespace CliToolTemplate.Utility
                 // マッチするものがなかったらこのまま。
             }
         }
+        // [End] 入力時の再帰補完処理：
+        private void TabRecursive(StringBuilder buff)
+        {
+            // 一旦今入ってる入力値を読み取り、バッファをクリアする。
+            string input = buff.ToString();
+            OverWrite( buff.Clear().ToString() );
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write( " [連続TAB補完]::" );
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine( input );
+            Console.ResetColor();
+
+
+            // 読み取った入力値を１文字ずつ追記しながら Tab 補完処理を回す。
+            foreach ( char c in input )
+            {
+                // 今の入力バッファに１文字追記して、コンソール表示を合わせる。
+                string str = buff.Append( c ).ToString();
+                OverWrite( str );
+
+                // この状態で [Tab] 入力された事にして補完処理を実行。
+                this.TabComplete( buff );
+            }
+        }
+        // FunctionKey-Context からの選択処理：
         private void SelectFKC(StringBuilder buff, ConsoleKey key)
         {
             string value = this.context[key];
