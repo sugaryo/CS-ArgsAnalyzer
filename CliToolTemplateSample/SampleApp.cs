@@ -61,12 +61,33 @@ namespace CliToolTemplateSample
             try
             {
                 var wizzard = new InputWizzard();
-                Demo1( wizzard );
-                Demo2( wizzard, arguments );
+
+
+                if ( Begin( wizzard ) )
+                { 
+                    Demo1( wizzard );
+                    Demo2( wizzard, arguments );
+                }
             }
             finally
             {
                 Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
+        private static bool Begin(InputWizzard wizzard)
+        {
+            if ( wizzard.Ask( new[] { "これからデモ動作を行うよ!!" }, out bool answer, "Yes", "No" ) )
+            {
+                string result = answer ? "Yes" : "No";
+                Console.WriteLine( $"[{result}]が選択されました。" );
+
+                return answer;
+            }
+            else
+            {
+                Console.WriteLine( "どっちか選べっつったろうがよぉ？？" );
+                return false;
             }
         }
 
