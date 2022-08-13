@@ -134,5 +134,86 @@ namespace CliToolTemplate.Utility
             return true;
         }
         #endregion
+
+
+        #region Ask(Yes/No)
+        public bool Ask(IEnumerable<string> messages,
+                out bool answer,
+                string yes = "Y",
+                string no = "N",
+                bool ignorecase = true)
+        {
+            return this.AskCore( messages, out answer, yes, no, ignorecase );
+        }
+        public bool Ask(IEnumerable<string> messages,
+                Action trueCase,
+                Action falseCase,
+                string yes = "Y",
+                string no = "N",
+                bool ignorecase = true)
+        {
+            if ( this.AskCore( messages, out bool answer, yes, no, ignorecase ) )
+            {
+                if ( answer )
+                {
+                    trueCase();
+                }
+                else
+                {
+                    falseCase();
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool AskCore(IEnumerable<string> messages,
+                out bool answer,
+                string yes, 
+                string no,
+                bool ignorecase)
+        {
+            foreach ( var message in messages )
+            {
+                Console.WriteLine( message );
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write( "select which case " );
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write( "[" + yes + "]" );
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write( " / " );
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write( "[" + no + "]" );
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine( ignorecase ? " ignore-case" : "" );
+
+
+            var compare = ignorecase 
+                    ? StringComparison.OrdinalIgnoreCase 
+                    : StringComparison.Ordinal;
+
+            string str = Console.ReadLine();
+            if ( null == str || this.CancelKeywords.Contains( str ) )
+            {
+                // 入力無し
+            }
+            else if ( str.Equals( yes, compare ) )
+            {
+                answer = true;
+                return true;
+            }
+            else if ( str.Equals( no, compare ) )
+            {
+                answer = false;
+                return true;
+            }
+            answer = false;
+            return false;
+        }
+        #endregion
     }
 }
