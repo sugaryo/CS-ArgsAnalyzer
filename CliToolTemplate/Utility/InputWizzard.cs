@@ -169,7 +169,7 @@ namespace CliToolTemplate.Utility
                 return false;
             }
         }
-        public bool AskCore(IEnumerable<string> messages,
+        private bool AskCore(IEnumerable<string> messages,
                 out bool answer,
                 string yes, 
                 string no,
