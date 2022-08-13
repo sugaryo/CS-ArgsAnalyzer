@@ -77,7 +77,7 @@ namespace CliToolTemplateSample
 
         private static bool Begin(InputWizzard wizzard)
         {
-            if ( wizzard.Ask( new[] { "これからデモ動作を行うよ!!" }, out bool answer, "Yes", "No" ) )
+            if ( wizzard.Ask( "これからデモ動作を行うよ!!", out bool answer, "Yes", "No" ) )
             {
                 string result = answer ? "Yes" : "No";
                 Console.WriteLine( $"[{result}]が選択されました。" );

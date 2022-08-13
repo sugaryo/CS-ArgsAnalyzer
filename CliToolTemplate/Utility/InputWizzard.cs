@@ -24,6 +24,15 @@ namespace CliToolTemplate.Utility
 
 
         #region TryInput
+        public bool TryInput(string message, out string value, TabCompletion complete)
+        {
+            return this.TryInput( new[] { message }, out value, complete );
+        }
+        public bool TryInput(string message, out string value)
+        {
+            return this.TryInput( new[] { message }, out value );
+        }
+
         public bool TryInput(IEnumerable<string> messages, out string value, TabCompletion complete)
         {
             return this.TryInputCore( messages, out value, complete.ReadLine );
@@ -32,6 +41,7 @@ namespace CliToolTemplate.Utility
         {
             return this.TryInputCore( messages, out value, Console.ReadLine );
         }
+        
         private bool TryInputCore(
                 IEnumerable<string> messages, 
                 out string value, 
@@ -57,23 +67,62 @@ namespace CliToolTemplate.Utility
         #endregion
 
         #region TryInputOrPath
-        
+
+        public bool TryInputOrPath(
+                string message,
+                Action<string> input,
+                Action<FileInfo> file,
+                Action<DirectoryInfo> dir,
+                TabCompletion complete)
+        {
+            return this.TryInputOrPath( new[] { message }, input, file, dir, complete );
+        }
+        public bool TryInputOrPath(
+                string message,
+                Action<string> input,
+                Action<FileInfo> file,
+                Action<DirectoryInfo> dir)
+        {
+            return this.TryInputOrPath( new[] { message }, input, file, dir );
+        }
+        public bool TryInputOrPath(
+                string message,
+                Action<string> input,
+                Action<string> path,
+                TabCompletion complete)
+        {
+            return this.TryInputOrPath( new[] { message }, input, path, complete );
+        }
+        public bool TryInputOrPath(
+                string message,
+                Action<string> input,
+                Action<string> path)
+        {
+            return this.TryInputOrPath( new[] { message }, input, path );
+        }
+
         public bool TryInputOrPath(
                 IEnumerable<string> messages, 
-                Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir, TabCompletion complete)
+                Action<string> input, 
+                Action<FileInfo> file, 
+                Action<DirectoryInfo> dir, 
+                TabCompletion complete)
         {
             return this.TryInputOrPathCore( messages, input, file, dir, complete.ReadLine );
         }
         public bool TryInputOrPath(
-            IEnumerable<string> messages,
-            Action<string> input, Action<FileInfo> file, Action<DirectoryInfo> dir)
+                IEnumerable<string> messages,
+                Action<string> input, 
+                Action<FileInfo> file, 
+                Action<DirectoryInfo> dir)
         {
             return this.TryInputOrPathCore( messages, input, file, dir, Console.ReadLine );
         }
-        
         public bool TryInputOrPath(
                 IEnumerable<string> messages, 
-                Action<string> input, Action<string> path, TabCompletion complete)
+                Action<string> input, 
+                Action<string> path, 
+                TabCompletion complete)
         {
             void FileCallback(FileInfo f)
             {
@@ -87,7 +136,8 @@ namespace CliToolTemplate.Utility
         }
         public bool TryInputOrPath(
                 IEnumerable<string> messages, 
-                Action<string> input, Action<string> path)
+                Action<string> input, 
+                Action<string> path)
         {
             void FileCallback(FileInfo f)
             {
@@ -137,7 +187,29 @@ namespace CliToolTemplate.Utility
 
 
         #region Ask(Yes/No)
-        public bool Ask(IEnumerable<string> messages,
+
+        public bool Ask(
+                string message,
+                out bool answer,
+                string yes = "Y",
+                string no = "N",
+                bool ignorecase = true)
+        {
+            return this.Ask( new[] { message }, out answer, yes, no, ignorecase );
+        }
+        public bool Ask(
+                string message,
+                Action trueCase,
+                Action falseCase,
+                string yes = "Y",
+                string no = "N",
+                bool ignorecase = true)
+        {
+            return this.Ask( new[] { message }, trueCase, falseCase, yes, no, ignorecase );
+        }
+
+        public bool Ask(
+                IEnumerable<string> messages,
                 out bool answer,
                 string yes = "Y",
                 string no = "N",
@@ -145,7 +217,8 @@ namespace CliToolTemplate.Utility
         {
             return this.AskCore( messages, out answer, yes, no, ignorecase );
         }
-        public bool Ask(IEnumerable<string> messages,
+        public bool Ask(
+                IEnumerable<string> messages,
                 Action trueCase,
                 Action falseCase,
                 string yes = "Y",
