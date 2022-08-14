@@ -262,14 +262,13 @@ namespace CliToolTemplate.Utility
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write( "[" + no + "]" );
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine( ignorecase ? " ignore-case" : "" );
-
+            Console.WriteLine( ignorecase ? "  ※ ignore-case" : "" );
+            Console.ResetColor();
+            string str = Console.ReadLine();
 
             var compare = ignorecase 
                     ? StringComparison.OrdinalIgnoreCase 
                     : StringComparison.Ordinal;
-
-            string str = Console.ReadLine();
             if ( null == str || this.CancelKeywords.Contains( str ) )
             {
                 // 入力無し

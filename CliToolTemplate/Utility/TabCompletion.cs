@@ -40,6 +40,8 @@ namespace CliToolTemplate.Utility
         {
             try
             {
+                Console.ResetColor();
+
                 // 再帰処理をキックして ReadKey しながら補完入力する。
                 return this.ReadLineCore( new StringBuilder() );
             }
