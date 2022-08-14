@@ -13,6 +13,8 @@
 bash の `bash-completion` みたいな `TAB` キーでの入力補完機能を作った。  
 `InputWizzard` に `TabCompletion` を組み込み。
 
+`ReadLine` 開始時に、設定されている選択肢の初期表示と FunctionKey 設定処理を追加。
+
 ### End入力補完（連続Tab補完）
 
 > "A" + [TAB] + "B" + [TAB] + "C" + [TAB]
