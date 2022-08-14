@@ -40,7 +40,10 @@ namespace CliToolTemplate.Utility
         {
             try
             {
+                // 色々初期化 ＋ 選択肢の初期表示。
                 Console.ResetColor();
+                this.context.Clear();
+                this.ShowSelection( this.data );
 
                 // 再帰処理をキックして ReadKey しながら補完入力する。
                 return this.ReadLineCore( new StringBuilder() );
@@ -144,15 +147,15 @@ namespace CliToolTemplate.Utility
         //   - ヒットしなかった場合は何もしない。
         private void TabComplete(StringBuilder buff)
         {
+            // Tab 入力する毎にコンテキストをクリアする。
+            // ※ ShowSelection するルートで更新される。
+            this.context.Clear();
+
             // データから前方一致するものを抜き出し、ヒットした件数に応じてコンソール処理する。
             string input = buff.ToString();
             var matches = this.data
                 .Where( x => x.StartsWith( input ) )
                 .ToArray();
-
-
-            // ■ Tab 入力する毎にコンテキストを更新する。
-            this.context.Clear();
 
 
             // ■１件（確定）
@@ -166,35 +169,8 @@ namespace CliToolTemplate.Utility
             // ■複数（絞り込まれたものの中から共通部分まで入力を補完する）
             else if ( 1 < matches.Length )
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine( $" [TAB補完]" );
-
-                int length = matches.Select( x => x.Length ).Max();
-
-                foreach ( var m in matches )
-                {
-                    // 前方一致した候補を表示。
-                    string value = m.PadRight( length );
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    if ( this.Indent )
-                    {
-                        Console.Write( $"  - {value}" );
-                    }
-                    else
-                    {
-                        Console.Write( $"{value}" );
-                    }
-
-                    // ファンクションキーが設定されていたら表示。
-                    var key = this.context.Add( m );
-                    if ( key != ConsoleKey.NoName )
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write( $"    [{key}]" );
-                    }
-                    Console.WriteLine();
-                }
-                Console.ResetColor();
+                // 前方一致した候補を選択肢表示。
+                this.ShowSelection( matches );
 
                 // 前方一致が複数ある場合は共通部分まで入力補完。
                 string prefix = FowardMatcher.Like( matches );
@@ -207,6 +183,41 @@ namespace CliToolTemplate.Utility
                 // マッチするものがなかったらこのまま。
             }
         }
+
+        // [Tab] 入力時の選択肢表示：
+        private void ShowSelection(IEnumerable<string> selection)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine( $" [TAB補完]" );
+
+            int length = selection.Select( x => x.Length ).Max();
+
+            foreach ( var item in selection )
+            {
+                // 前方一致した候補を表示。
+                string value = item.PadRight( length );
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                if ( this.Indent )
+                {
+                    Console.Write( $"  - {value}" );
+                }
+                else
+                {
+                    Console.Write( $"{value}" );
+                }
+
+                // ファンクションキーが設定されたら表示。
+                var key = this.context.Add( item );
+                if ( key != ConsoleKey.NoName )
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write( $"    [{key}]" );
+                }
+                Console.WriteLine();
+            }
+            Console.ResetColor();
+        }
+
         // [End] 入力時の再帰補完処理：
         private void TabRecursive(StringBuilder buff)
         {
@@ -232,6 +243,7 @@ namespace CliToolTemplate.Utility
                 this.TabComplete( buff );
             }
         }
+        
         // FunctionKey-Context からの選択処理：
         private void SelectFKC(StringBuilder buff, ConsoleKey key)
         {
@@ -244,6 +256,7 @@ namespace CliToolTemplate.Utility
             buff.reset( value );
             OverWrite( buff.ToString() );
         }
+        
         #endregion
         
 
