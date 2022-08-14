@@ -77,7 +77,7 @@ namespace CliToolTemplateSample
 
         private static bool Begin(InputWizzard wizzard)
         {
-            if ( wizzard.Ask( "これからデモ動作を行うよ!!", out bool answer, "Yes", "No" ) )
+            if ( wizzard.Ask( out bool answer, "Yes", "No", "これからデモ動作を行うよ!!" ) )
             {
                 string result = answer ? "Yes" : "No";
                 Console.WriteLine( $"[{result}]が選択されました。" );
@@ -100,10 +100,6 @@ namespace CliToolTemplateSample
 
             string mode = "";
             if ( wizzard.TryInputOrPath(
-                    new[] {
-                        "適当に入力するか、ファイル・フォルダのパスを指定してください。",
-                        @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
-                    },
                     input =>
                     {
                         mode = "string";
@@ -118,7 +114,9 @@ namespace CliToolTemplateSample
                     {
                         mode = "folder";
                         Console.WriteLine( $"フォルダ[{dir.FullName}]が渡されました。" );
-                    }
+                    },
+                    "適当に入力するか、ファイル・フォルダのパスを指定してください。",
+                    @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
                 ) )
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -143,12 +141,10 @@ namespace CliToolTemplateSample
             TabCompletion tab = new TabCompletion( arguments.AsParameters() );
 
             string value;
-            if ( wizzard.TryInput( 
-                new[] {
-                        "Tab補完入力のデモ動作。",
-                        @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)"
-                    },
-                out value, tab ) )
+            if ( wizzard.TryInput( out value
+                , tab
+                , "Tab補完入力のデモ動作。"
+                , @"(中止するには ""exit"" 若しくは ""cancel"" を入力します。)" ) )
             {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine( $"入力 : {value}" );
