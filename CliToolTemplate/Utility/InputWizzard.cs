@@ -24,27 +24,19 @@ namespace CliToolTemplate.Utility
 
 
         #region TryInput
-        public bool TryInput(string message, out string value, TabCompletion complete)
-        {
-            return this.TryInput( new[] { message }, out value, complete );
-        }
-        public bool TryInput(string message, out string value)
-        {
-            return this.TryInput( new[] { message }, out value );
-        }
 
-        public bool TryInput(IEnumerable<string> messages, out string value, TabCompletion complete)
+        public bool TryInput(out string value, params string[] messages)
         {
-            return this.TryInputCore( messages, out value, complete.ReadLine );
-        }
-        public bool TryInput(IEnumerable<string> messages, out string value)
-        {
-            return this.TryInputCore( messages, out value, Console.ReadLine );
+            return this.TryInputCore( out value, messages, Console.ReadLine );
         }
         
-        private bool TryInputCore(
+        public bool TryInput(out string value, TabCompletion complete, params string[] messages)
+        {
+            return this.TryInputCore( out value, messages, complete.ReadLine );
+        }
+        
+        private bool TryInputCore( out string value, 
                 IEnumerable<string> messages, 
-                out string value, 
                 Func<string> readline)
         {
             foreach ( var message in messages )
@@ -69,60 +61,27 @@ namespace CliToolTemplate.Utility
         #region TryInputOrPath
 
         public bool TryInputOrPath(
-                string message,
                 Action<string> input,
                 Action<FileInfo> file,
                 Action<DirectoryInfo> dir,
-                TabCompletion complete)
-        {
-            return this.TryInputOrPath( new[] { message }, input, file, dir, complete );
-        }
-        public bool TryInputOrPath(
-                string message,
-                Action<string> input,
-                Action<FileInfo> file,
-                Action<DirectoryInfo> dir)
-        {
-            return this.TryInputOrPath( new[] { message }, input, file, dir );
-        }
-        public bool TryInputOrPath(
-                string message,
-                Action<string> input,
-                Action<string> path,
-                TabCompletion complete)
-        {
-            return this.TryInputOrPath( new[] { message }, input, path, complete );
-        }
-        public bool TryInputOrPath(
-                string message,
-                Action<string> input,
-                Action<string> path)
-        {
-            return this.TryInputOrPath( new[] { message }, input, path );
-        }
-
-        public bool TryInputOrPath(
-                IEnumerable<string> messages, 
-                Action<string> input, 
-                Action<FileInfo> file, 
-                Action<DirectoryInfo> dir, 
-                TabCompletion complete)
+                TabCompletion complete,
+                params string[] messages)
         {
             return this.TryInputOrPathCore( messages, input, file, dir, complete.ReadLine );
         }
         public bool TryInputOrPath(
-                IEnumerable<string> messages,
-                Action<string> input, 
-                Action<FileInfo> file, 
-                Action<DirectoryInfo> dir)
+                Action<string> input,
+                Action<FileInfo> file,
+                Action<DirectoryInfo> dir,
+                params string[] messages)
         {
             return this.TryInputOrPathCore( messages, input, file, dir, Console.ReadLine );
         }
         public bool TryInputOrPath(
-                IEnumerable<string> messages, 
                 Action<string> input, 
                 Action<string> path, 
-                TabCompletion complete)
+                TabCompletion complete,
+                params string[] messages)
         {
             void FileCallback(FileInfo f)
             {
@@ -135,9 +94,9 @@ namespace CliToolTemplate.Utility
             return this.TryInputOrPathCore( messages, input, FileCallback, DirCallback, complete.ReadLine );
         }
         public bool TryInputOrPath(
-                IEnumerable<string> messages, 
                 Action<string> input, 
-                Action<string> path)
+                Action<string> path,
+                params string[] messages)
         {
             void FileCallback(FileInfo f)
             {
@@ -188,65 +147,38 @@ namespace CliToolTemplate.Utility
 
         #region Ask(Yes/No)
 
-        public bool Ask(
-                string message,
-                out bool answer,
-                string yes = "Y",
-                string no = "N",
-                bool ignorecase = true)
+        public bool Ask( out bool answer, params string[] messages)
         {
-            return this.Ask( new[] { message }, out answer, yes, no, ignorecase );
+            return this.AskCore( out answer, messages, "Y", "N", true );
         }
-        public bool Ask(
-                string message,
-                Action trueCase,
-                Action falseCase,
-                string yes = "Y",
-                string no = "N",
-                bool ignorecase = true)
+        public bool Ask(out bool answer,
+                bool ignorecase,
+                params string[] messages)
         {
-            return this.Ask( new[] { message }, trueCase, falseCase, yes, no, ignorecase );
+            return this.AskCore( out answer, messages, "Y", "N", ignorecase );
+        }
+        public bool Ask(out bool answer,
+                string yes,
+                string no,
+                params string[] messages)
+        {
+            return this.AskCore( out answer, messages, yes, no, true );
+        }
+        public bool Ask( out bool answer,
+                string yes,
+                string no,
+                bool ignorecase,
+                params string[] messages )
+        {
+            return this.AskCore( out answer, messages, yes, no, ignorecase );
         }
 
-        public bool Ask(
+
+        private bool AskCore( out bool answer,
                 IEnumerable<string> messages,
-                out bool answer,
-                string yes = "Y",
-                string no = "N",
-                bool ignorecase = true)
-        {
-            return this.AskCore( messages, out answer, yes, no, ignorecase );
-        }
-        public bool Ask(
-                IEnumerable<string> messages,
-                Action trueCase,
-                Action falseCase,
-                string yes = "Y",
-                string no = "N",
-                bool ignorecase = true)
-        {
-            if ( this.AskCore( messages, out bool answer, yes, no, ignorecase ) )
-            {
-                if ( answer )
-                {
-                    trueCase();
-                }
-                else
-                {
-                    falseCase();
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        private bool AskCore(IEnumerable<string> messages,
-                out bool answer,
                 string yes, 
                 string no,
-                bool ignorecase)
+                bool ignorecase )
         {
             foreach ( var message in messages )
             {
